@@ -5,5 +5,16 @@ import { AppProviders } from '@repo/config';
 import { appConfig } from '../config/app.config';
 
 export function Providers({ children }: { children: ReactNode }) {
-  return <AppProviders appConfig={appConfig}>{children}</AppProviders>;
+  return (
+    <AppProviders
+      appConfig={appConfig}
+      routes={{
+        login: '/vm/login',
+        forbidden: '/vm/unauthorized',
+        notFound: '/vm',
+      }}
+    >
+      {children}
+    </AppProviders>
+  );
 }
