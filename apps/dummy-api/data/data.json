@@ -1,0 +1,13 @@
+{
+  "users": {
+    "admin": {
+      "accessToken": "validated-access-token",
+      "refreshToken": "validated-refresh-token",
+      "mfaType": 1,
+      "singleIDurl": "https://www.abc.com?requestId=123",
+      "otpValidity": 180,
+      "success": true
+    }
+  },
+  "otp": "123456"
+}
