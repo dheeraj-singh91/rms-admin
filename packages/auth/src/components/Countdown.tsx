@@ -31,17 +31,15 @@ export function Countdown({ initialSeconds, onResend, isLoading }: CountdownProp
   };
 
   if (timeLeft > 0) {
-    return <div className="text-gray-600 font-mono text-lg">{formatTime(timeLeft)}</div>;
+    return <span className="otp-timer">{formatTime(timeLeft)}</span>;
   }
 
   return (
     <Button
       label="Resend OTP"
-      severity="secondary"
-      onClick={() => {
-        onResend();
-      }}
+      onClick={onResend}
       disabled={isLoading}
+      className="otp-resend-btn"
     />
   );
 }

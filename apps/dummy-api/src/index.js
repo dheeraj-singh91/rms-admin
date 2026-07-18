@@ -74,6 +74,19 @@ app.post('/auth/verifyOtp', (req, res) => {
   });
 });
 
+app.post('/auth/updatePassword', (req, res) => {
+  const { username, newPassword } = req.body;
+  if (!username || !newPassword) {
+    return res.status(400).json({ success: false, msg: 'Username and new password are required' });
+  }
+
+  // Dummy: always succeed for any user
+  res.json({
+    success: true,
+    msg: 'Password updated successfully',
+  });
+});
+
 app.post('/auth/validateToken', (req, res) => {
   const { token } = req.body;
   if (!token) {

@@ -16,6 +16,8 @@ export type {
   VerifyOtpResponse,
   ValidateTokenRequest,
   ValidateTokenResponse,
+  UpdatePasswordRequest,
+  UpdatePasswordResponse,
   // Menu Types
   MenuItem,
   MenuConfig,

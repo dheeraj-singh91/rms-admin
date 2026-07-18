@@ -49,6 +49,7 @@ export {
   useSendOtpMutation,
   useVerifyOtpMutation,
   useValidateTokenMutation,
+  useUpdatePasswordMutation,
 } from './hooks/useAuthMutations';
 
 // UI Components
@@ -58,4 +59,5 @@ export { ForgotPassword } from './components/ForgotPassword';
 export { LoginForm, type LoginFormData } from './components/LoginForm';
 export { OtpInput } from './components/OtpInput';
 export { OtpScreen } from './components/OtpScreen';
+export { ResetPasswordForm, type ResetPasswordFormData } from './components/ResetPasswordForm';
 

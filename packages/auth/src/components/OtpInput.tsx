@@ -1,5 +1,4 @@
 import React, { useRef, KeyboardEvent, ClipboardEvent } from 'react';
-import { Input } from '@repo/ui';
 
 interface OtpInputProps {
   value: string;
@@ -52,13 +51,13 @@ export function OtpInput({ value, onChange, length = 6, disabled = false }: OtpI
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const val = e.target.value.replace(/[^0-9]/g, '');
     if (!val) return;
-    
+
     // Use only the last character entered
     const char = val.slice(-1);
     const newDigits = [...digits];
     newDigits[index] = char;
     onChange(newDigits.join(''));
-    
+
     if (char && index < length - 1) {
       focusInput(index + 1);
     }
@@ -78,14 +77,14 @@ export function OtpInput({ value, onChange, length = 6, disabled = false }: OtpI
   };
 
   return (
-    <div className="flex gap-2 justify-between w-full max-w-xs mx-auto">
+    <div className="otp-digits-wrap">
       {digits.map((digit, index) => (
         <input
           key={index}
           type="text"
           inputMode="numeric"
           pattern="[0-9]*"
-          maxLength={2} // allow typing over to get last char
+          maxLength={2}
           value={digit}
           disabled={disabled}
           autoFocus={index === 0}
@@ -95,7 +94,8 @@ export function OtpInput({ value, onChange, length = 6, disabled = false }: OtpI
           onChange={(e) => handleChange(e, index)}
           onKeyDown={(e) => handleKeyDown(e, index)}
           onPaste={handlePaste}
-          className="w-12 h-12 text-center text-xl font-bold border border-gray-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors"
+          className={`otp-digit${digit ? ' otp-digit-filled' : ''}`}
+          aria-label={`OTP digit ${index + 1}`}
         />
       ))}
     </div>

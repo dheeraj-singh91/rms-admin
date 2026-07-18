@@ -75,6 +75,7 @@ export default function LoginPage() {
       onSubmit={handleLogin}
       isLoading={validateMutation.isPending}
       error={error}
+      resetPath="/reset-password"
     />
   );
 }

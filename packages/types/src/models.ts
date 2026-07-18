@@ -106,6 +106,16 @@ export interface ValidateTokenResponse {
   desiredScreen: string;
 }
 
+export interface UpdatePasswordRequest {
+  username: string;
+  newPassword: string;
+}
+
+export interface UpdatePasswordResponse {
+  success: boolean;
+  msg: string;
+}
+
 // ==================== Menu Types ====================
 
 export interface MenuItem {

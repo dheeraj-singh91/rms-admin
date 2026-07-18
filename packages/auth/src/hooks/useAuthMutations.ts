@@ -11,6 +11,8 @@ import type {
   VerifyOtpResponse,
   ValidateTokenRequest,
   ValidateTokenResponse,
+  UpdatePasswordRequest,
+  UpdatePasswordResponse,
 } from '@repo/types';
 
 export const useGetTokenMutation = () => {
@@ -53,6 +55,15 @@ export const useValidateTokenMutation = () => {
   return useMutation({
     mutationFn: async (payload: ValidateTokenRequest) => {
       const response = await getApiClient().post<ValidateTokenResponse>('/auth/validateToken', payload);
+      return response.data;
+    },
+  });
+};
+
+export const useUpdatePasswordMutation = () => {
+  return useMutation({
+    mutationFn: async (payload: UpdatePasswordRequest) => {
+      const response = await getApiClient().post<UpdatePasswordResponse>('/auth/updatePassword', payload);
       return response.data;
     },
   });

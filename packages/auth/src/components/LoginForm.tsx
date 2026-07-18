@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Input, Button, Card } from '@repo/ui';
+import { Input, Button } from '@repo/ui';
 import { Captcha } from './Captcha';
 import { ForgotPassword } from './ForgotPassword';
+import './LoginForm.css';
 
 const loginSchema = z.object({
   username: z.string().min(1, 'Username is required'),
@@ -20,9 +21,10 @@ interface LoginFormProps {
   onSubmit: (data: LoginFormData) => void;
   isLoading: boolean;
   error?: string | null;
+  resetPath?: string;
 }
 
-export function LoginForm({ appName, logo, onSubmit, isLoading, error }: LoginFormProps) {
+export function LoginForm({ appName, logo, onSubmit, isLoading, error, resetPath }: LoginFormProps) {
   const {
     control,
     handleSubmit,
@@ -37,84 +39,185 @@ export function LoginForm({ appName, logo, onSubmit, isLoading, error }: LoginFo
   });
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
-      <Card className="w-full max-w-md shadow-lg p-6">
-        <div className="flex flex-col items-center mb-6">
-          <img src={logo} alt={appName} className="h-16 mb-2 object-contain" />
-          <h1 className="text-2xl font-bold text-gray-800">{appName} Login</h1>
-        </div>
-
-        {error && (
-          <div className="mb-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded text-sm">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-gray-700">Username</label>
-            <Controller
-              name="username"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  placeholder="Enter username"
-                  className={errors.username ? 'border-red-500' : ''}
-                  disabled={isLoading}
-                />
-              )}
+    <div className="lf-page">
+      <div className="lf-card">
+        {/* ── LEFT: Form Panel ── */}
+        <div className="lf-left">
+          {/* Logo */}
+          <div className="lf-logo-wrap">
+            <img
+              src={logo}
+              alt={appName}
+              className="lf-logo"
+              onError={(e) => {
+                const target = e.currentTarget;
+                target.style.display = 'none';
+                const fallback = target.nextElementSibling as HTMLElement;
+                if (fallback) fallback.style.display = 'flex';
+              }}
             />
-            {errors.username && <span className="text-red-500 text-xs">{errors.username.message}</span>}
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-gray-700">Password</label>
-            <Controller
-              name="password"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  type="password"
-                  placeholder="Enter password"
-                  className={errors.password ? 'border-red-500' : ''}
-                  disabled={isLoading}
-                />
-              )}
-            />
-            {errors.password && <span className="text-red-500 text-xs">{errors.password.message}</span>}
-            <div className="mt-1">
-              <ForgotPassword />
+            <div className="lf-logo-fallback" style={{ display: 'none' }}>
+              {appName.charAt(0).toUpperCase()}
             </div>
           </div>
 
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-gray-700">Captcha (A8c3X)</label>
-            <Captcha />
-            <Controller
-              name="captcha"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  placeholder="Enter captcha text"
-                  className={`mt-2 ${errors.captcha ? 'border-red-500' : ''}`}
-                  disabled={isLoading}
-                />
-              )}
-            />
-            {errors.captcha && <span className="text-red-500 text-xs">{errors.captcha.message}</span>}
-          </div>
+          <h1 className="lf-heading">Welcome Back!</h1>
+          <p className="lf-subheading">Sign in to {appName} to continue</p>
 
-          <Button
-            type="submit"
-            label={isLoading ? 'Authenticating...' : 'Login'}
-            disabled={isLoading}
-            className="w-full py-2.5 mt-2"
-          />
-        </form>
-      </Card>
+          {/* Error */}
+          {error && (
+            <div className="lf-error">
+              <i className="pi pi-exclamation-circle lf-error-icon" />
+              {error}
+            </div>
+          )}
+
+          {/* Form */}
+          <form onSubmit={handleSubmit(onSubmit)} className="lf-form" noValidate>
+            {/* Username */}
+            <div className="lf-field">
+              <label className="lf-label" htmlFor="lf-username">Username</label>
+              <Controller
+                name="username"
+                control={control}
+                render={({ field }) => (
+                  <div className={`lf-input-wrap${errors.username ? ' lf-input-error' : ''}`}>
+                    <i className="pi pi-user lf-input-icon" />
+                    <Input
+                      {...field}
+                      id="lf-username"
+                      placeholder="Enter your username"
+                      disabled={isLoading}
+                      aria-invalid={!!errors.username}
+                    />
+                  </div>
+                )}
+              />
+              {errors.username && (
+                <span className="lf-field-error">{errors.username.message}</span>
+              )}
+            </div>
+
+            {/* Password */}
+            <div className="lf-field">
+              <div className="lf-password-header">
+                <label className="lf-label" htmlFor="lf-password">Password</label>
+                <ForgotPassword resetPath={resetPath} />
+              </div>
+              <Controller
+                name="password"
+                control={control}
+                render={({ field }) => (
+                  <div className={`lf-input-wrap${errors.password ? ' lf-input-error' : ''}`}>
+                    <i className="pi pi-lock lf-input-icon" />
+                    <Input
+                      {...field}
+                      id="lf-password"
+                      type="password"
+                      placeholder="Enter your password"
+                      disabled={isLoading}
+                      aria-invalid={!!errors.password}
+                    />
+                  </div>
+                )}
+              />
+              {errors.password && (
+                <span className="lf-field-error">{errors.password.message}</span>
+              )}
+            </div>
+
+            {/* Captcha */}
+            <div className="lf-field">
+              <label className="lf-label">Security Code</label>
+              <Captcha />
+              <Controller
+                name="captcha"
+                control={control}
+                render={({ field }) => (
+                  <div className={`lf-input-wrap${errors.captcha ? ' lf-input-error' : ''}`} style={{ marginTop: '0.5rem' }}>
+                    <i className="pi pi-shield lf-input-icon" />
+                    <Input
+                      {...field}
+                      id="lf-captcha"
+                      placeholder="Enter the code above"
+                      disabled={isLoading}
+                      aria-invalid={!!errors.captcha}
+                    />
+                  </div>
+                )}
+              />
+              {errors.captcha && (
+                <span className="lf-field-error">{errors.captcha.message}</span>
+              )}
+            </div>
+
+            {/* Submit */}
+            <Button
+              id="lf-submit"
+              type="submit"
+              label={isLoading ? 'Authenticating…' : 'Login'}
+              icon={isLoading ? 'pi pi-spin pi-spinner' : 'pi pi-sign-in'}
+              iconPos="right"
+              disabled={isLoading}
+              className="lf-submit-btn"
+            />
+          </form>
+
+          <p className="lf-app-name">{appName}</p>
+        </div>
+
+        {/* ── RIGHT: Visual Panel ── */}
+        <div className="lf-right">
+          {/* Animated blobs */}
+          <div className="lf-blob lf-blob-1" />
+          <div className="lf-blob lf-blob-2" />
+          <div className="lf-blob lf-blob-3" />
+
+          <div className="lf-illustration">
+            {/* Shield icon */}
+            <div className="lf-shield">
+              <i className="pi pi-shield lf-shield-icon" />
+            </div>
+
+            {/* Feature cards */}
+            <div className="lf-feature-cards">
+              <div className="lf-feature-card">
+                <div className="lf-feature-icon lf-feature-icon-purple">
+                  <i className="pi pi-lock" />
+                </div>
+                <div className="lf-feature-text">
+                  <h4>Secure Access</h4>
+                  <p>Enterprise-grade encryption</p>
+                </div>
+              </div>
+
+              <div className="lf-feature-card">
+                <div className="lf-feature-icon lf-feature-icon-pink">
+                  <i className="pi pi-check-circle" />
+                </div>
+                <div className="lf-feature-text">
+                  <h4>Multi-Factor Auth</h4>
+                  <p>OTP & SingleID supported</p>
+                </div>
+              </div>
+
+              <div className="lf-feature-card">
+                <div className="lf-feature-icon lf-feature-icon-blue">
+                  <i className="pi pi-server" />
+                </div>
+                <div className="lf-feature-text">
+                  <h4>VM Management</h4>
+                  <p>Full lifecycle control</p>
+                </div>
+              </div>
+            </div>
+
+            <p className="lf-tagline">
+              Manage your virtual infrastructure with confidence
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
